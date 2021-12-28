@@ -1,45 +1,38 @@
-import { useState } from 'react'
-import logo from './logo.svg'
-import './styles.sass'
+import { Component, FC, ReactNode } from "react";
+import { Routes, Route } from "react-router-dom";
+import "./styles.sass";
 
-function App() {
-  const [count, setCount] = useState(0)
+interface IProps {}
 
-  return (
-    <div className="App bg-light container">
-      <header className="App-header">
-        <img src={logo} className="w-25 mx-auto d-block" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button className='btn btn-primary' type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
-  )
+interface IState {
+  token?: string;
+  apiBase?: string;
+  name?: string;
 }
 
-export default App
+export default class App extends Component<IProps, IState> {
+  constructor(props: IProps) {
+    super(props);
+    this.state = {};
+  }
+
+  apiCall = async (path: string, headers: any = {}, method = "GET") => {
+    if (this.state.token !== undefined)
+      headers["Authorization"] = `Bearer ${this.state.token}`;
+
+    return await fetch(this.state.apiBase + path, { method, headers });
+  };
+
+  getName = () => {
+    this.setState((oldState) => ({ name: "jeff", ...oldState }));
+  };
+
+  render = (): ReactNode => {
+    return (
+      <div>
+        <code>{this.state.name}</code>
+        <button onClick={this.getName}>oijwefojiewiwefiojwfedjef</button>
+      </div>
+    );
+  };
+}
