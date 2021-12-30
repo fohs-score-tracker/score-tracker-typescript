@@ -16,17 +16,14 @@ export default function App() {
       setBase(base: string) {
         updateState(({ api }) => ({ api: { ...api, base } }));
       },
-        
     },
-
-
   });
   return (
     <APIContext.Provider value={state.api}>
       {/*
           TODO
        */}
-      <LoginScreen/>
+      <LoginScreen />
     </APIContext.Provider>
   );
 }
