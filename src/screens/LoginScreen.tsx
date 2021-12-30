@@ -1,12 +1,19 @@
 import { useState } from "react";
 import { useAPI } from "../api";
+import Alert from "./Alert";
+
+interface IState {
+  username: string;
+  password: string;
+  waitingForLogin: boolean;
+}
 
 export default function LoginScreen() {
   const [state, setState] = useState({
     username: "",
     password: "",
+    waitingForLogin: false,
   });
-
   const api = useAPI();
 
   const handleUsername = (event: any) => {
@@ -16,27 +23,31 @@ export default function LoginScreen() {
     setState({ ...state, password: event.target.value });
   };
 
-  const handleSubmit = (event: any) => {
-    // alert("A name was submitted: ");
-    // let formData = new FormData();
-    // formData.append("username", state.username);
-    // formData.append("password", state.password);
-
-    // let test = api
-    //   .call("/token", {
-    //     method: "POST",
-    //     body: formData,
-    //   })
-    //   .then((r) => r.json());
+  const handleSubmit = async (event: any) => {
     event.preventDefault();
-    alert("You have submitted the form.");
+    let formData = new FormData();
+    formData.append("username", state.username);
+    formData.append("password", state.password);
+
+    try {
+      setState({ ...state, waitingForLogin: true });
+      let test = (await api
+        .call("/token", {
+          method: "POST",
+          body: formData,
+        })
+        .then((r) => r.json())) as { access_token: string };
+      api.setToken(test.access_token);
+    } finally {
+      state.waitingForLogin = false;
+    }
   };
 
   return (
     <div>
       <div className="h-100 d-flex align-items-center">
         <form
-          onSubmit={handleSubmit}
+          onSubmit={(event) => handleSubmit(event)}
           className="mx-auto bg-light border rounded p-3 shadow-lg col-11 col-md-auto"
         >
           <h1 className="fw-light text-center">
@@ -45,7 +56,10 @@ export default function LoginScreen() {
             <b> FOHS ScoreTracker</b>
           </h1>
           <hr />
-
+          <Alert
+            className="position-absolute top-0 start-0 end-0 m-1"
+            type="danger"
+          />
           <div className="mb-3">
             <label className="form-label"> Email </label>
             <input
@@ -85,6 +99,7 @@ export default function LoginScreen() {
             <button
               type="submit"
               className="btn btn-primary col-md-auto col-12 mb-2 mb-md-0 me-0 me-md-2"
+              disabled={state.waitingForLogin}
             >
               Login
             </button>
@@ -97,6 +112,7 @@ export default function LoginScreen() {
               Settings
             </button>
           </div>
+
           <div
             className="collapse rounded border shadow-sm mt-2 p-2"
             id="loginSettings"
@@ -108,6 +124,8 @@ export default function LoginScreen() {
             <input
               type="url"
               className="form-control font-monospace"
+              value={api.base}
+              onChange={(event) => api.setBase(event.target.value)}
               required
             />
           </div>

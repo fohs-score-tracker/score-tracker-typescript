@@ -7,7 +7,7 @@ export default class WelcomeScreen extends React.Component{
     render(): ReactNode {
         return(
             <div >
-                
+
 
             </div>
 
