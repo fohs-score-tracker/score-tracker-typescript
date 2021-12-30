@@ -1,10 +1,30 @@
 import { useState } from "react";
+import { useAPI } from "../api";
+
+const api = useAPI();
 
 export default function LoginScreen() {
+   const [state, setState] = useState({
+      username: "",
+      password: "", });  
+  
+  const handleUsername = (event: any) => {
+    setState({ ...state, username: event.target.value });
+  }
+  const handlePassword = (event: any) => {
+
+    setState({ ...state, password: event.target.value });
+  }
+
+  const handleSubmit = (event: any) => {
+
+    event.preventDefault();
+   api.call("/token", "POST" 
+
   return (
     <div>
       <div className="h-100 d-flex align-items-center">
-        <form className="mx-auto bg-light border rounded p-3 shadow-lg col-11 col-md-auto">
+        <form onSubmit={this.handleSubmit} className="mx-auto bg-light border rounded p-3 shadow-lg col-11 col-md-auto">
           <h1 className="fw-light text-center">
             Welcome to
             <br className="d-md-none" />
@@ -14,7 +34,8 @@ export default function LoginScreen() {
 
           <div className="mb-3">
             <label className="form-label"> Email </label>
-            <input
+            <input onChange={handleUsername}
+            value={state.username}
               required
               placeholder="Enter your email"
               type="email"
@@ -22,9 +43,11 @@ export default function LoginScreen() {
             />
           </div>
           <div className="mb-1 mb-md-2">
-            <label className="form-label"> Password </label>
+            <label className="form-label"> Password </label>            
             <input
               required
+              onChange={handlePassword}
+              value={state.password}
               type="password"
               placeholder="Enter your password"
               className="form-control"
@@ -63,6 +86,11 @@ export default function LoginScreen() {
     </div>
   );
 }
+
+
+
+
+
 
 function alertCouldNotLogin(props: any) {
   return (
