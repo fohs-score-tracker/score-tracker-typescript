@@ -1,18 +1,21 @@
 import { useState } from "react";
-import { useAPI } from "../api";
+import { Value } from "sass";
+import { APIError, useAPI } from "../api";
 import Alert from "./Alert";
 
 interface IState {
   username: string;
   password: string;
   waitingForLogin: boolean;
+  loginError?: string;
 }
 
 export default function LoginScreen() {
-  const [state, setState] = useState({
+  const [state, setState] = useState<IState>({
     username: "",
     password: "",
     waitingForLogin: false,
+    loginError: undefined,
   });
   const api = useAPI();
 
@@ -23,6 +26,10 @@ export default function LoginScreen() {
     setState({ ...state, password: event.target.value });
   };
 
+  const handleApi = (event: any) => {
+    api.setBase(event.target.value);
+  };
+
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     let formData = new FormData();
@@ -31,15 +38,29 @@ export default function LoginScreen() {
 
     try {
       setState({ ...state, waitingForLogin: true });
-      let test = (await api
+      let result = (await api
         .call("/token", {
           method: "POST",
           body: formData,
         })
-        .then((r) => r.json())) as { access_token: string };
-      api.setToken(test.access_token);
-    } finally {
-      state.waitingForLogin = false;
+        .then((r) => r.json())) as { access_token: string } | APIError;
+      if ("access_token" in result) {
+        api.setToken(result.access_token);
+        setState({ ...state, waitingForLogin: false });
+      } else {
+        setState({
+          ...state,
+          waitingForLogin: false,
+          loginError: result.detail,
+        });
+      }
+    } catch (e) {
+      console.error(e);
+      setState({
+        ...state,
+        waitingForLogin: false,
+        loginError: "Server broke",
+      });
     }
   };
 
@@ -56,10 +77,21 @@ export default function LoginScreen() {
             <b> FOHS ScoreTracker</b>
           </h1>
           <hr />
-          <Alert
-            className="position-absolute top-0 start-0 end-0 m-1"
-            type="danger"
-          />
+          {state.waitingForLogin ? (
+            <Alert
+              type="info"
+              className="position-absolute bottom-0 start-0 end-0 m-1"
+            >
+              Logging in...
+            </Alert>
+          ) : null}
+          {state.loginError ? (
+            <Alert
+              className="position-absolute top-0 start-0 end-0 m-1"
+              type="danger"
+            />
+          ) : null}
+
           <div className="mb-3">
             <label className="form-label"> Email </label>
             <input
@@ -124,8 +156,8 @@ export default function LoginScreen() {
             <input
               type="url"
               className="form-control font-monospace"
-              value={api.base}
               onChange={(event) => api.setBase(event.target.value)}
+              value={api.base}
               required
             />
           </div>

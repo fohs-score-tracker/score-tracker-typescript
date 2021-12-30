@@ -8,6 +8,10 @@ export interface API {
   setBase: (newBase: string) => void;
 }
 
+export interface APIError {
+  detail: string;
+}
+
 export async function call(this: API, path: string, args: RequestInit = {}) {
   if (this.token !== undefined) {
     if (args.headers === undefined) args.headers = {};

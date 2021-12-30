@@ -1,8 +1,11 @@
+import { ReactNode } from "react";
+
 interface IState {}
 
 interface IProps {
   type?: string;
   className?: string;
+  children?: ReactNode;
 }
 
 export default function Alert(props: IProps) {
@@ -10,7 +13,7 @@ export default function Alert(props: IProps) {
     <div
       className={`alert alert-dismissible d-flex align-items-center alert-${props.type} ${props.className}`}
     >
-      <slot>Something went wrong</slot>
+      {props.children || "Something went wrong"}
       <button type="button" className="btn-close btn" data-bs-dismiss="alert" />
     </div>
   );
