@@ -3,13 +3,19 @@ import { createContext, useContext } from "react";
 export interface API {
   token?: string;
   base: string;
-  call: (path: string, args: RequestInit) => Promise<Response>;
+  call: (path: string, args?: RequestInit) => Promise<Response>;
   setToken: (newToken: string) => void;
   setBase: (newBase: string) => void;
 }
 
 export interface APIError {
   detail: string;
+}
+
+// types returned by API
+export interface apiPlayer {
+  name: string;
+  id: number;
 }
 
 export async function call(this: API, path: string, args: RequestInit = {}) {

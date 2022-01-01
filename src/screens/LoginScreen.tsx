@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Value } from "sass";
 import { APIError, useAPI } from "../api";
-import Alert from "./Alert";
+import Alert from "../components/Alert";
 
 interface IState {
   username: string;
