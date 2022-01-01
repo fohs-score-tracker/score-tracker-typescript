@@ -9,7 +9,7 @@ import { WelcomeScreen } from "./screens/WelcomeScreen";
 // interface IState {
 //   api: API;
 // }
-const App = () => {
+export default function App() {
     
   const [players, setPlayers] = useState([])
 
@@ -55,6 +55,5 @@ const App = () => {
     //   </HashRouter>
     // </APIContext.Provider>
   );
-}
+};
 
-export default App;
