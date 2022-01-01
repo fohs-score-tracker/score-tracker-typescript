@@ -1,20 +1,31 @@
 import { ReactNode } from "react";
 
-interface IState {}
-
 interface IProps {
+  show: boolean;
+  onClose?: () => void;
   type?: string;
   className?: string;
   children?: ReactNode;
 }
 
-export default function Alert(props: IProps) {
+export default function Alert(props: IProps): JSX.Element {
   return (
-    <div
-      className={`alert alert-dismissible d-flex align-items-center alert-${props.type} ${props.className}`}
-    >
-      {props.children || "Something went wrong"}
-      <button type="button" className="btn-close btn" data-bs-dismiss="alert" />
-    </div>
+    <>
+      {props.show && (
+        <div
+          className={`rounded-lg flex p-2 px-4 shadow items-center justify-between ${props.className}`}
+        >
+          <div>{props.children || "Something went wrong"}</div>
+          <button
+            type="button"
+            className="text-2xl"
+            title="Dismiss"
+            onClick={() => props.onClose && props.onClose()}
+          >
+            &times;
+          </button>
+        </div>
+      )}
+    </>
   );
 }

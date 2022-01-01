@@ -1,6 +1,5 @@
 import { useState, useEffect, FC } from "react";
 import { API, APIContext, call } from "./api";
-import "./styles.sass";
 import LoginScreen from "./screens/LoginScreen";
 import { Routes, HashRouter, Route } from "react-router-dom";
 import WelcomeScreen from "./screens/WelcomeScreen";
