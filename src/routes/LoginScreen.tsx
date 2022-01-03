@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import Alert from "../components/Alert";
 import Modal from "../components/Modal";
+import { useNavigate } from "react-router";
 
 interface IProps {
   apiCall: IApiCall;
@@ -20,6 +21,8 @@ export default function LoginScreen(props: IProps) {
   const [waitingForLogin, setWaitingForLogin] = useState(false);
   const [loginError, setLoginError] = useState<string | undefined>(undefined);
   const [showOptions, toggleShowOptions] = useState(false);
+
+  const navigate = useNavigate();
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -40,6 +43,7 @@ export default function LoginScreen(props: IProps) {
         onTokenChange(result.access_token);
         setWaitingForLogin(false);
         // TODO: redirect route here :)
+        navigate("/games");
       } else {
         setWaitingForLogin(false);
         setLoginError(result.detail);
@@ -128,8 +132,15 @@ export default function LoginScreen(props: IProps) {
         onClose={() => toggleShowOptions(false)}
         title="Advanced Options"
       >
-        <Alert show="always" className="mb-4 bg-yellow-300 shadow-yellow-200 text-yellow-900">
-          <FontAwesomeIcon className="mr-4" size="lg" icon={faExclamationTriangle}/>
+        <Alert
+          show="always"
+          className="mb-4 bg-yellow-300 shadow-yellow-200 text-yellow-900"
+        >
+          <FontAwesomeIcon
+            className="mr-4"
+            size="lg"
+            icon={faExclamationTriangle}
+          />
           Only change these if you know what you're doing
         </Alert>
         <label className="font-bold text-secondary block"> API Base </label>

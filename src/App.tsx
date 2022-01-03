@@ -36,7 +36,7 @@ export default function App() {
               />
             }
           />
-          <Route path="games" element={<GameList />} />
+          <Route path="games" element={<GameList apiCall={apiCall} />} />
         </Route>
       </Routes>
     </HashRouter>
