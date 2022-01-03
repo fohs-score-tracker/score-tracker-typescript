@@ -1,5 +1,7 @@
 import { FormEvent, useState } from "react";
 import { APIError, IApiCall } from "../api";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import Alert from "../components/Alert";
 import Modal from "../components/Modal";
 
@@ -55,7 +57,7 @@ export default function LoginScreen(props: IProps) {
         <Alert
           show={!!loginError}
           onClose={() => setLoginError(undefined)}
-          className="absolute inset-x-8 top-8 bg-red-100 shadow-red-200 text-red-900"
+          className="absolute inset-x-8 top-8 bg-red-300 shadow-red-200 text-red-900"
         >
           {waitingForLogin ? "Waiting..." : loginError}
         </Alert>
@@ -126,7 +128,8 @@ export default function LoginScreen(props: IProps) {
         onClose={() => toggleShowOptions(false)}
         title="Advanced Options"
       >
-        <Alert show className="bg-yellow-100 shadow-yellow-200 text-yellow-900">
+        <Alert show="always" className="mb-4 bg-yellow-300 shadow-yellow-200 text-yellow-900">
+          <FontAwesomeIcon className="mr-4" size="lg" icon={faExclamationTriangle}/>
           Only change these if you know what you're doing
         </Alert>
         <label className="font-bold text-secondary block"> API Base </label>

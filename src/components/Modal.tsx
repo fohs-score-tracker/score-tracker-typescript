@@ -16,7 +16,7 @@ export default function Modal({ children, title, ...props }: IProps) {
       className="fixed inset-0 flex items-center justify-center"
     >
       <Dialog.Overlay className="bg-secondary/50 inset-0 fixed backdrop-blur" />
-      <div className="z-[1] rounded-lg overflow-hidden shadow-2xl shadow-tertiary">
+      <div className="m-4 z-[1] rounded-lg overflow-hidden shadow-2xl shadow-tertiary">
         <div className="overflow-auto">
           <div className="bg-primary text-white px-4 py-1 flex items-center justify-between ">
             <div>{title}</div>

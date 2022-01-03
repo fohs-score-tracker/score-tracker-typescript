@@ -19,7 +19,7 @@ export default function WelcomeScreen({ apiCall, api }: IProps) {
         onClose={() => toggleAlert(false)}
         className="bg-blue-100 shadow-blue-200 text-blue-900"
       >
-        <pre className="font-code text-blue-900">
+        <pre className="whitespace-pre-wrap font-code text-blue-900">
           {JSON.stringify(api, null, 2)}
         </pre>
       </Alert>
