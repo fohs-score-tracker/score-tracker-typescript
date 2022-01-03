@@ -1,9 +1,9 @@
 import { ReactNode } from "react";
+import CloseButton from "./CloseButton";
 
 interface IProps {
-  show: boolean;
+  show: boolean | "always";
   onClose?: () => void;
-  type?: string;
   className?: string;
   children?: ReactNode;
 }
@@ -16,14 +16,12 @@ export default function Alert(props: IProps): JSX.Element {
           className={`rounded-lg flex p-2 px-4 shadow items-center justify-between ${props.className}`}
         >
           <div>{props.children || "Something went wrong"}</div>
-          <button
-            type="button"
-            className="text-2xl"
-            title="Dismiss"
-            onClick={() => props.onClose && props.onClose()}
-          >
-            &times;
-          </button>
+          {props.show != "always" && (
+            <CloseButton
+              className="ml-1"
+              onClick={() => props.onClose && props.onClose()}
+            />
+          )}
         </div>
       )}
     </>

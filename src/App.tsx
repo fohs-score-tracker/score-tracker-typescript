@@ -1,45 +1,44 @@
 import { useState, useEffect, FC } from "react";
-import { API, APIContext, call } from "./api";
-import LoginScreen from "./screens/LoginScreen";
+import { IApiCall } from "./api";
+import LoginScreen from "./routes/LoginScreen";
 import { Routes, HashRouter, Route } from "react-router-dom";
-import WelcomeScreen from "./screens/WelcomeScreen";
+import WelcomeScreen from "./routes/WelcomeScreen";
+import GameList from "./routes/GameList";
 
-interface IState {
-  api: API;
-}
 export default function App() {
-  const [players, setPlayers] = useState([]);
+  const [base, setBase] = useState("https://fohs-score-tracker.herokuapp.com");
+  const [token, setToken] = useState<string | undefined>(undefined);
 
-  const [api, setAPI] = useState<API>({
-    call,
-    base: "https://fohs-score-tracker.herokuapp.com",
-    token: undefined,
-    setBase: (base) => {
-      setAPI({ ...api, base });
-    },
-    setToken: (token) => {
-      setAPI({ ...api, token });
-    },
-  });
-  // use Effect to getPlayers from Server
-  useEffect(() => {
-    async function getPlayers() {
-      const response = await api.call("/players");
-      if (response.ok) setPlayers(await response.json());
+  async function apiCall(path: string, args: RequestInit = {}) {
+    if (token !== undefined) {
+      if (args.headers === undefined) args.headers = {};
+      (args.headers as any)["Authorization"] = `Bearer ${token}`;
     }
-    getPlayers();
-  }, []);
+    return await fetch(base + path, args);
+  }
 
   return (
-    <APIContext.Provider value={api}>
-      <HashRouter>
-        <Routes>
-          <Route path="/">
-            <Route index element={<WelcomeScreen players={players} />} />
-            <Route path="login" element={<LoginScreen />} />
-          </Route>
-        </Routes>
-      </HashRouter>
-    </APIContext.Provider>
+    <HashRouter>
+      <Routes>
+        <Route path="/">
+          <Route
+            index
+            element={<WelcomeScreen apiCall={apiCall} api={{ base, token }} />}
+          />
+          <Route
+            path="login"
+            element={
+              <LoginScreen
+                apiCall={apiCall}
+                base={base}
+                onTokenChange={(s) => setToken(s)}
+                onBaseChange={(s) => setBase(s)}
+              />
+            }
+          />
+          <Route path="games" element={<GameList />} />
+        </Route>
+      </Routes>
+    </HashRouter>
   );
 }

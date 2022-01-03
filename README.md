@@ -1,10 +1,11 @@
 # score-tracker-typescript
+
 TypeScript Version
 
 ## Requirements
 
-* Node.js
-* `yarn` package manager
+- Node.js
+- `yarn` package manager
 
 ## How to setup
 
