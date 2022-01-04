@@ -4,25 +4,11 @@ import LoginScreen from "./routes/LoginScreen";
 import { Routes, HashRouter, Route } from "react-router-dom";
 import WelcomeScreen from "./routes/WelcomeScreen";
 import GameList from "./routes/GameList";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 export default function App() {
   const [base, setBase] = useState("https://fohs-score-tracker.herokuapp.com");
   const [token, setToken] = useState<string | undefined>(undefined);
-  useEffect(() => {
-    if (localStorage.getItem("score-tracker-session") !== null) {
-      const session = JSON.parse(
-        localStorage.getItem("score-tracker-session") as string
-      );
-      setBase(session.base);
-      setToken(session.token);
-    } else if (sessionStorage.getItem("score-tracker-session") !== null) {
-      const session = JSON.parse(
-        sessionStorage.getItem("score-tracker-session") as string
-      );
-      setBase(session.base);
-      setToken(session.token);
-    }
-  }, []);
 
   async function apiCall(path: string, args: RequestInit = {}) {
     if (token !== undefined) {
@@ -51,7 +37,16 @@ export default function App() {
               />
             }
           />
-          <Route path="games" element={<GameList apiCall={apiCall} />} />
+          <Route
+            path="games"
+            element={
+              <ProtectedRoute
+                onTokenChange={(s) => setToken(s)}
+                onBaseChange={(s) => setBase(s)}
+                screen={<GameList apiCall={apiCall} />}
+              />
+            }
+          />
         </Route>
       </Routes>
     </HashRouter>

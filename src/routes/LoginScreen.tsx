@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { APIError, IApiCall } from "../api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
@@ -23,6 +23,24 @@ export default function LoginScreen(props: IProps) {
   const [showOptions, toggleShowOptions] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (localStorage.getItem("score-tracker-session") !== null) {
+      const session = JSON.parse(
+        localStorage.getItem("score-tracker-session") as string
+      );
+      onBaseChange(session.base);
+      onTokenChange(session.token);
+      navigate("/games");
+    } else if (sessionStorage.getItem("score-tracker-session") !== null) {
+      const session = JSON.parse(
+        sessionStorage.getItem("score-tracker-session") as string
+      );
+      onBaseChange(session.base);
+      onTokenChange(session.token);
+      navigate("/games");
+    }
+  }, []);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
