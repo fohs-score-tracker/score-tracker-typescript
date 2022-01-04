@@ -1,8 +1,8 @@
-import { apiPlayer } from "../api";
+import { APIPlayer } from "../api";
 import Player from "../components/Player";
 
 interface IProps {
-  players: apiPlayer[];
+  players: APIPlayer[];
 }
 
 export default function PlayersScreen({ players }: IProps) {

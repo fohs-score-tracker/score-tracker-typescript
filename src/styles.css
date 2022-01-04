@@ -23,7 +23,7 @@
   }
 
   .btn {
-    @apply rounded shadow px-2 py-1 font-medium focus:ring-primary focus:ring-2 focus:ring-offset-2 outline-transparent transition;
+    @apply rounded shadow px-2 py-1 font-medium focus:ring-primary focus:ring-2 focus:ring-offset-2 outline-transparent transition disabled:bg-opacity-80;
   }
 }
 

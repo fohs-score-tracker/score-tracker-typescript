@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { apiPlayer, IApiCall } from "../api";
+import { APIPlayer, IApiCall } from "../api";
 import Alert from "../components/Alert";
 import PlayersScreen from "./PlayersScreen";
 
@@ -11,7 +11,7 @@ interface IProps {
 export default function WelcomeScreen({ apiCall, api }: IProps) {
   const [showAlert, toggleAlert] = useState(true);
 
-  const players: apiPlayer[] = []; //  not my problem
+  const players: APIPlayer[] = []; //  not my problem
   return (
     <div className="container mx-auto mt-4">
       <Alert

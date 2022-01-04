@@ -1,5 +1,5 @@
 import { FormEvent, useState } from "react";
-import { APIError, IApiCall } from "../api";
+import { APIAccessTokenResponse, APIError, IApiCall } from "../api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import Alert from "../components/Alert";
@@ -25,29 +25,32 @@ export default function LoginScreen(props: IProps) {
     event.preventDefault();
     event.stopPropagation();
 
-    let formData = new FormData();
-    formData.append("username", username);
-    formData.append("password", password);
+    const method = "POST";
+    let body = new FormData();
+    body.append("username", username);
+    body.append("password", password);
 
+    setWaitingForLogin(true);
+    setLoginError(undefined);
+
+    let result: APIAccessTokenResponse | undefined = undefined;
     try {
-      setWaitingForLogin(true);
-      setLoginError(undefined);
-      let result = (await apiCall("/token", {
-        method: "POST",
-        body: formData,
-      }).then((r) => r.json())) as { access_token: string } | APIError;
-      if ("access_token" in result) {
-        onTokenChange(result.access_token);
-        setWaitingForLogin(false);
-        // TODO: redirect route here :)
-      } else {
-        setWaitingForLogin(false);
-        setLoginError(result.detail);
-      }
+      let response = await apiCall("/token", { method, body });
+      result = JSON.parse(await response.json());
     } catch (e) {
       console.error(e);
-      setWaitingForLogin(false);
       setLoginError("Server broke");
+    } finally {
+      setWaitingForLogin(false);
+    }
+
+    if (result === undefined) return;
+    if ("access_token" in result) {
+      onTokenChange(result.access_token);
+      alert("among us");
+    } else {
+      setWaitingForLogin(false);
+      setLoginError(result.detail);
     }
   }
 
@@ -128,8 +131,15 @@ export default function LoginScreen(props: IProps) {
         onClose={() => toggleShowOptions(false)}
         title="Advanced Options"
       >
-        <Alert show="always" className="mb-4 bg-yellow-300 shadow-yellow-200 text-yellow-900">
-          <FontAwesomeIcon className="mr-4" size="lg" icon={faExclamationTriangle}/>
+        <Alert
+          show="always"
+          className="mb-4 bg-yellow-300 shadow-yellow-200 text-yellow-900"
+        >
+          <FontAwesomeIcon
+            className="mr-4"
+            size="lg"
+            icon={faExclamationTriangle}
+          />
           Only change these if you know what you're doing
         </Alert>
         <label className="font-bold text-secondary block"> API Base </label>
