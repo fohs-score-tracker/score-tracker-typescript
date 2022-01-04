@@ -25,7 +25,7 @@ export default function GameList(props: IProps) {
       <div className="flex justify-center  items-center">
         <div className=" grid grid-cols-2 gap-4  ">
           {games.map((game) => (
-            <Game key={game.id} gameName={game.name} />
+            <Game key={game.id} gameName={game.name} apiCall={apiCall} />
           ))}
         </div>
       </div>

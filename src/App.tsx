@@ -8,6 +8,21 @@ import GameList from "./routes/GameList";
 export default function App() {
   const [base, setBase] = useState("https://fohs-score-tracker.herokuapp.com");
   const [token, setToken] = useState<string | undefined>(undefined);
+  useEffect(() => {
+    if (localStorage.getItem("score-tracker-session") !== null) {
+      const session = JSON.parse(
+        localStorage.getItem("score-tracker-session") as string
+      );
+      setBase(session.base);
+      setToken(session.token);
+    } else if (sessionStorage.getItem("score-tracker-session") !== null) {
+      const session = JSON.parse(
+        sessionStorage.getItem("score-tracker-session") as string
+      );
+      setBase(session.base);
+      setToken(session.token);
+    }
+  }, []);
 
   async function apiCall(path: string, args: RequestInit = {}) {
     if (token !== undefined) {

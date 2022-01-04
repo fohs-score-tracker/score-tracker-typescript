@@ -21,7 +21,7 @@ export default function LoginScreen(props: IProps) {
   const [waitingForLogin, setWaitingForLogin] = useState(false);
   const [loginError, setLoginError] = useState<string | undefined>(undefined);
   const [showOptions, toggleShowOptions] = useState(false);
-
+  const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
 
   async function handleSubmit(event: FormEvent) {
@@ -42,7 +42,16 @@ export default function LoginScreen(props: IProps) {
       if ("access_token" in result) {
         onTokenChange(result.access_token);
         setWaitingForLogin(false);
-        // TODO: redirect route here :)
+        const saveLogin = JSON.stringify({
+          base: base,
+          token: result.access_token, //! Tell me if this is a security risk
+        });
+
+        if (rememberMe) {
+          localStorage.setItem("score-tracker-session", saveLogin);
+        } else {
+          sessionStorage.setItem("score-tracker-session", saveLogin);
+        }
         navigate("/games");
       } else {
         setWaitingForLogin(false);
@@ -100,6 +109,8 @@ export default function LoginScreen(props: IProps) {
                 type="checkbox"
                 id="rememberMe"
                 className="check mr-1 bg-gray-100"
+                onChange={(event) => setRememberMe(event.target.checked)}
+                checked={rememberMe}
               />
               <label htmlFor="rememberMe" className="text-secondary">
                 Remember me

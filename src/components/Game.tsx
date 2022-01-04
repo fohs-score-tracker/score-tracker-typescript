@@ -10,9 +10,7 @@ export default function Game(props: IProps) {
   const { apiCall, gameName } = props;
   return (
     <div className="">
-      <div className="">
-        <p> {gameName} </p>
-      </div>
+      <p> {gameName} </p>
     </div>
   );
 }
