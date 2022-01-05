@@ -1,4 +1,3 @@
-import React from "react";
 import { IApiCall } from "../api";
 
 interface IProps {

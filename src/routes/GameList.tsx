@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import GameListDisplay from "../components/GameListDisplay";
 import Modal from "../components/Modal";
+import { IGameCreate, IGameResult, IPlayerResult } from "../schemiaTypes";
 
 interface IProps {
   apiCall: IApiCall;
@@ -25,7 +26,7 @@ export default function GameList(props: IProps) {
   }, []);
 
   async function deleteGame(id: Number) {
-    setGames(games.filter((game) => game.id !== id));
+    setGames(games.filter((game: IGameResult) => game.id !== id));
 
     const res = await apiCall(`/games/${id}`, {
       method: "DELETE",
@@ -37,11 +38,11 @@ export default function GameList(props: IProps) {
     const UserData = await apiCall("/users/me").then((res) => res.json());
     const playerData = await apiCall("/players").then((res) => res.json());
     const players = playerData.filter(
-      (player) => player.user.id === UserData.id
+      (player: IPlayerResult) => player.user.id === UserData.id
     );
-    const player_id = players.map((player) => player.id);
+    const player_id = players.map((player: IPlayerResult) => player.id);
 
-    const gameData = {
+    const gameData: IGameCreate = {
       name: newTeamName,
       other_team: newOtherTeamName,
       user_id: UserData.id,

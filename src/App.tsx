@@ -1,11 +1,10 @@
-import { useState, useEffect, FC } from "react";
-import { IApiCall } from "./api";
 import { useSessionstorageState } from "rooks";
 import LoginScreen from "./routes/LoginScreen";
 import { Routes, HashRouter, Route } from "react-router-dom";
 import WelcomeScreen from "./routes/WelcomeScreen";
 import GameList from "./routes/GameList";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import { ISession } from "./schemiaTypes";
 
 export default function App() {
   const [session, setSession] = useSessionstorageState(
@@ -15,8 +14,6 @@ export default function App() {
       token: "",
     }
   );
-  // const [base, setBase] = useState("https://fohs-score-tracker.herokuapp.com");
-  // const [token, setToken] = useState<string | undefined>(undefined);
 
   async function apiCall(path: string, args: RequestInit = {}) {
     if (session.token !== undefined) {
