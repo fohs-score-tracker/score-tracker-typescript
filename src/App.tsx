@@ -1,5 +1,6 @@
 import { useState, useEffect, FC } from "react";
 import { IApiCall } from "./api";
+import { useSessionstorageState } from "rooks";
 import LoginScreen from "./routes/LoginScreen";
 import { Routes, HashRouter, Route } from "react-router-dom";
 import WelcomeScreen from "./routes/WelcomeScreen";
@@ -7,33 +8,45 @@ import GameList from "./routes/GameList";
 import ProtectedRoute from "./routes/ProtectedRoute";
 
 export default function App() {
-  const [base, setBase] = useState("https://fohs-score-tracker.herokuapp.com");
-  const [token, setToken] = useState<string | undefined>(undefined);
+  const [session, setSession] = useSessionstorageState(
+    "score-tracker-session",
+    {
+      base: "https://fohs-score-tracker.herokuapp.com",
+      token: "",
+    }
+  );
+  // const [base, setBase] = useState("https://fohs-score-tracker.herokuapp.com");
+  // const [token, setToken] = useState<string | undefined>(undefined);
 
   async function apiCall(path: string, args: RequestInit = {}) {
-    if (token !== undefined) {
+    if (session.token !== undefined) {
       if (args.headers === undefined) args.headers = {};
-      (args.headers as any)["Authorization"] = `Bearer ${token}`;
+      (args.headers as any)["Authorization"] = `Bearer ${session.token}`;
     }
-    return await fetch(base + path, args);
+    return await fetch(session.base + path, args);
   }
 
   return (
     <HashRouter>
       <Routes>
         <Route path="/">
-          <Route
+          {/* <Route
             index
-            element={<WelcomeScreen apiCall={apiCall} api={{ base, token }} />}
-          />
+            element={
+              <WelcomeScreen
+                apiCall={apiCall}
+                api={(session.base, session.token)}
+              />
+            }
+          /> */}
           <Route
             path="login"
             element={
               <LoginScreen
                 apiCall={apiCall}
-                base={base}
-                onTokenChange={(s) => setToken(s)}
-                onBaseChange={(s) => setBase(s)}
+                base={session.base}
+                onTokenChange={(s) => setSession({ ...session, token: s })}
+                onBaseChange={(s) => setSession({ ...session, base: s })}
               />
             }
           />
@@ -41,8 +54,14 @@ export default function App() {
             path="games"
             element={
               <ProtectedRoute
-                onTokenChange={(s) => setToken(s)}
-                onBaseChange={(s) => setBase(s)}
+                apiCall={apiCall}
+                onTokenChange={(s: string) =>
+                  setSession({ ...session, token: s })
+                }
+                onBaseChange={(s: string) =>
+                  setSession({ ...session, base: s })
+                }
+                session={session}
                 screen={<GameList apiCall={apiCall} />}
               />
             }
