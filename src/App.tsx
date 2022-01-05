@@ -4,7 +4,6 @@ import { Routes, HashRouter, Route } from "react-router-dom";
 import WelcomeScreen from "./routes/WelcomeScreen";
 import GameList from "./routes/GameList";
 import ProtectedRoute from "./routes/ProtectedRoute";
-import { ISession } from "./schemiaTypes";
 
 export default function App() {
   const [session, setSession] = useSessionstorageState(
