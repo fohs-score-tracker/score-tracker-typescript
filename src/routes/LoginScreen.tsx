@@ -42,17 +42,13 @@ export default function LoginScreen(props: IProps) {
       if ("access_token" in result) {
         onTokenChange(result.access_token);
         setWaitingForLogin(false);
-        const saveLogin = JSON.stringify({
+        
+        const saveLogin = JSON.stringify({ //! Yes this is very hacky and I'm sorry for it.
           base: base,
           token: result.access_token, //! Tell me if this is a security risk
         });
-
-        if (rememberMe) {
-          localStorage.setItem("score-tracker-session", saveLogin);
-        } else {
           sessionStorage.setItem("score-tracker-session", saveLogin);
-        }
-        navigate("/games");
+          navigate("/games");
       } else {
         setWaitingForLogin(false);
         setLoginError(result.detail);

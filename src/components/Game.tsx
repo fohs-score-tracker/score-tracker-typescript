@@ -1,17 +1,29 @@
 import { IApiCall } from "../api";
+import { useNavigate } from "react-router";
+import { ISession } from "../schemiaTypes";
 
 interface IProps {
   apiCall: IApiCall;
   gameName: string;
   id: Number;
   onDelete: (id: Number) => void;
+  session: ISession;
 }
 
 export default function Game(props: IProps) {
-  const { apiCall, gameName, id, onDelete } = props;
+  const { apiCall, gameName, id, onDelete, session} = props;
+  const navigate = useNavigate();
+
+  function viewGame() {
+    const newSession = JSON.stringify({ token: session.token, base: session.base, gameId: id });
+    sessionStorage.setItem("score-tracker-session", newSession);
+    navigate("/gamescreen");
+  }
+  
+
 
   return (
-    <div className="flex w-96 shadow-l outline-3 outline-black   bg-gray-100 ">
+    <div className="flex w-96 gap-20 shadow-l outline-3 outline-black   bg-gray-100 ">
       <div className="m-10 content-center ">
         <h2 className="text-xl"> {gameName} </h2>
         <slot> shots out of missed </slot>
@@ -27,7 +39,7 @@ export default function Game(props: IProps) {
             <button
               className="btn bg-blue-600 text-white"
               onClick={() => {
-                console.log(id);
+                viewGame();                
               }}
             >
               {" "}
@@ -39,3 +51,4 @@ export default function Game(props: IProps) {
     </div>
   );
 }
+

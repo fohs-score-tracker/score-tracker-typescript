@@ -4,20 +4,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import GameListDisplay from "../components/GameListDisplay";
 import Modal from "../components/Modal";
-import { IGameCreate, IGameResult, IPlayerResult } from "../schemiaTypes";
+import { IGameCreate, IGameResult, IPlayerResult, ISession } from "../schemiaTypes";
 
 interface IProps {
   apiCall: IApiCall;
+  session: ISession
 }
 
 export default function GameList(props: IProps) {
-  const { apiCall } = props;
+  const { apiCall,  session } = props;
   const [games, setGames] = useState([]);
   const [openAddTeamModal, setOpenAddTeamModal] = useState(false);
   const [newTeamName, setNewTeamName] = useState("");
   const [newOtherTeamName, setNewOtherTeamName] = useState("");
   useEffect(() => {
-    const data = getGames();
+     getGames();
     async function getGames() {
       const res = await apiCall("/games");
       const gameData = await res.json();
@@ -58,14 +59,13 @@ export default function GameList(props: IProps) {
   }
 
   return (
-    <div className="h-full bg-gradient-to-r from-gray-100 to-gray-200">
-      <h1 className="text-center text-7xl ">Your Games</h1>
+    <div className=" h-full bg-gradient-to-r from-gray-100 to-gray-200">
+      <h1 className=" text-center text-7xl ">Your Games</h1>
       {games.length > 0 ? (
         <GameListDisplay
           games={games}
           onDelete={deleteGame}
-          apiCall={apiCall}
-        />
+          apiCall={apiCall} session={session}        />
       ) : (
         <h2 className="text-center text-5xl">There are no games to display.</h2>
       )}
@@ -80,14 +80,14 @@ export default function GameList(props: IProps) {
         <FontAwesomeIcon size="lg" icon={faPlus} color="white" />
       </button>
 
-      <Modal
+      <Modal 
         onClose={() => {
           setOpenAddTeamModal(false);
         }}
         open={openAddTeamModal}
         title="Add Game"
       >
-        <form onSubmit={createGame}>
+        <form onSubmit={createGame} className="p-2">
           <label className="font-bold text-secondary block"> Game Name </label>
           <input
             type="text"

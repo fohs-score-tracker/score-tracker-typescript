@@ -52,4 +52,5 @@ export interface IGameResult {
 export interface ISession {
   base: string;
   token?: string;
+  gameId?: number;
 }

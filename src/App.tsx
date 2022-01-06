@@ -4,6 +4,7 @@ import { Routes, HashRouter, Route } from "react-router-dom";
 import WelcomeScreen from "./routes/WelcomeScreen";
 import GameList from "./routes/GameList";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import GameScreen from "./routes/GameScreen";
 
 export default function App() {
   const [session, setSession] = useSessionstorageState(
@@ -11,6 +12,7 @@ export default function App() {
     {
       base: "https://fohs-score-tracker.herokuapp.com",
       token: "",
+      gameId: 0,
     }
   );
 
@@ -58,12 +60,26 @@ export default function App() {
                   setSession({ ...session, base: s })
                 }
                 session={session}
-                screen={<GameList apiCall={apiCall} />}
+                screen={<GameList apiCall={apiCall} session={session}   />}
               />
             }
           />
+        <Route path="gamescreen" element={ <ProtectedRoute apiCall={apiCall} onTokenChange={(s: string) =>
+            setSession({ ...session, token: s })
+          } onBaseChange={(s: string) =>
+            setSession({ ...session, base: s })
+          } session={session} screen={<GameScreen apiCall={apiCall} session={session}  />} />}/> 
+
         </Route>
       </Routes>
     </HashRouter>
   );
 }
+
+
+
+// <ProtectedRoute apiCall={apiCall} onTokenChange={(s: string) =>
+//   setSession({ ...session, token: s })
+// } onBaseChange={(s: string) =>
+//   setSession({ ...session, base: s })
+// } session={session} screen={<GameScreen apiCall={apiCall} session={session} onGameIdChange={(n: number) => setSession({ ...session, gameId: n })} />} />
