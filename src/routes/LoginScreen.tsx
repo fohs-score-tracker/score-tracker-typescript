@@ -42,13 +42,14 @@ export default function LoginScreen(props: IProps) {
       if ("access_token" in result) {
         onTokenChange(result.access_token);
         setWaitingForLogin(false);
-        
-        const saveLogin = JSON.stringify({ //! Yes this is very hacky and I'm sorry for it.
+
+        const saveLogin = JSON.stringify({
+          //! Yes this is very hacky and I'm sorry for it.
           base: base,
           token: result.access_token, //! Tell me if this is a security risk
         });
-          sessionStorage.setItem("score-tracker-session", saveLogin);
-          navigate("/games");
+        sessionStorage.setItem("score-tracker-session", saveLogin);
+        navigate("/games");
       } else {
         setWaitingForLogin(false);
         setLoginError(result.detail);
@@ -62,7 +63,7 @@ export default function LoginScreen(props: IProps) {
 
   return (
     <>
-      <div className="h-full flex flex-col justify-center items-center bg-secondary">
+      <div className="flex flex-col justify-center items-center bg-secondary h-full">
         <Alert
           show={!!loginError}
           onClose={() => setLoginError(undefined)}

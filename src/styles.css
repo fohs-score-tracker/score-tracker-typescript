@@ -27,17 +27,6 @@
   }
 }
 
-#addPlayerBtn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 99;
-  padding-top: 10px;
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-bottom: 10px;
-}
-
 /* from the old stylesheet
 $primary: #A80C04
 $secondary: #152635

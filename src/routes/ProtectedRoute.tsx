@@ -1,17 +1,20 @@
-import { useEffect } from "react";
+import { useEffect, ReactNode } from "react";
 import { Navigate, useNavigate } from "react-router";
 import { IApiCall } from "../api";
+import { ISession } from "../schemaTypes";
 
 interface IProps {
-  screen: JSX.Element;
+  children: ReactNode;
   apiCall: IApiCall;
+  session: ISession;
+  // onTokenChange: (s: string) => void;
+  // onBaseChange: (s: string) => void;
 }
 
-function ProtectedRoute(props: any) {
-  const { screen, apiCall } = props;
+export default function ProtectedRoute({ children, apiCall, session }: IProps) {
   const navigate = useNavigate();
 
-  let isAuthenticated = props.session.token !== "";
+  let isAuthenticated = session.token !== "";
 
   useEffect(() => {
     userConfirm().catch((e) => {
@@ -20,7 +23,7 @@ function ProtectedRoute(props: any) {
   }, []);
 
   async function userConfirm() {
-    const res = apiCall("/users/me");
+    const res = await apiCall("/users/me");
     if (res.status === 200) {
       isAuthenticated = true;
     } else {
@@ -28,7 +31,6 @@ function ProtectedRoute(props: any) {
     }
   }
 
-  return isAuthenticated ? screen : <Navigate to="/login" />;
+  if (!isAuthenticated) navigate("/login");
+  return children as JSX.Element;
 }
-
-export default ProtectedRoute;

@@ -13,7 +13,7 @@ export default function WelcomeScreen({ apiCall, api }: IProps) {
 
   const players: apiPlayer[] = []; //  not my problem
   return (
-    <div className="container mx-auto mt-4">
+    <div className="container mx-auto m-4">
       <Alert
         show={showAlert}
         onClose={() => toggleAlert(false)}

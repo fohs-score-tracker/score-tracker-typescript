@@ -28,15 +28,7 @@ export default function App() {
     <HashRouter>
       <Routes>
         <Route path="/">
-          {/* <Route
-            index
-            element={
-              <WelcomeScreen
-                apiCall={apiCall}
-                api={(session.base, session.token)}
-              />
-            }
-          /> */}
+          <Route index element="Index page intentionally left blank." />
           <Route
             path="login"
             element={
@@ -51,32 +43,30 @@ export default function App() {
           <Route
             path="games"
             element={
-              <ProtectedRoute
-                apiCall={apiCall}
-                onTokenChange={(s: string) =>
-                  setSession({ ...session, token: s })
-                }
-                onBaseChange={(s: string) =>
-                  setSession({ ...session, base: s })
-                }
-                session={session}
-                screen={<GameList apiCall={apiCall} session={session}   />}
-              />
+              <ProtectedRoute apiCall={apiCall} session={session}>
+                <GameList
+                  apiCall={apiCall}
+                  session={session}
+                  onGameIdChange={(id: number) =>
+                    setSession({ ...session, gameId: id })
+                  }
+                />
+              </ProtectedRoute>
             }
           />
-        <Route path="gamescreen" element={ <ProtectedRoute apiCall={apiCall} onTokenChange={(s: string) =>
-            setSession({ ...session, token: s })
-          } onBaseChange={(s: string) =>
-            setSession({ ...session, base: s })
-          } session={session} screen={<GameScreen apiCall={apiCall} session={session}  />} />}/> 
-
+          <Route
+            path="gamescreen"
+            element={
+              <ProtectedRoute apiCall={apiCall} session={session}>
+                <GameScreen apiCall={apiCall} session={session} />
+              </ProtectedRoute>
+            }
+          />
         </Route>
       </Routes>
     </HashRouter>
   );
 }
-
-
 
 // <ProtectedRoute apiCall={apiCall} onTokenChange={(s: string) =>
 //   setSession({ ...session, token: s })

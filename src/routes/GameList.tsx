@@ -4,21 +4,27 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import GameListDisplay from "../components/GameListDisplay";
 import Modal from "../components/Modal";
-import { IGameCreate, IGameResult, IPlayerResult, ISession } from "../schemiaTypes";
+import {
+  IGameCreate,
+  IGameResult,
+  IPlayerResult,
+  ISession,
+} from "../schemaTypes";
 
 interface IProps {
   apiCall: IApiCall;
-  session: ISession
+  session: ISession;
+  onGameIdChange: (s: number) => void;
 }
 
 export default function GameList(props: IProps) {
-  const { apiCall,  session } = props;
+  const { apiCall, session, onGameIdChange } = props;
   const [games, setGames] = useState([]);
   const [openAddTeamModal, setOpenAddTeamModal] = useState(false);
   const [newTeamName, setNewTeamName] = useState("");
   const [newOtherTeamName, setNewOtherTeamName] = useState("");
   useEffect(() => {
-     getGames();
+    getGames();
     async function getGames() {
       const res = await apiCall("/games");
       const gameData = await res.json();
@@ -59,20 +65,22 @@ export default function GameList(props: IProps) {
   }
 
   return (
-    <div className=" h-full bg-gradient-to-r from-gray-100 to-gray-200">
-      <h1 className=" text-center text-7xl ">Your Games</h1>
+    <div className="p-4">
+      <h1 className="mb-4 text-center text-7xl ">Your Games</h1>
       {games.length > 0 ? (
         <GameListDisplay
           games={games}
           onDelete={deleteGame}
-          apiCall={apiCall} session={session}        />
+          apiCall={apiCall}
+          session={session}
+          onGameIdChange={onGameIdChange}
+        />
       ) : (
         <h2 className="text-center text-5xl">There are no games to display.</h2>
       )}
 
       <button
-        className="btn bg-primary rounded-full"
-        id="addPlayerBtn"
+        className="btn bg-primary rounded-full fixed right-5 bottom-5 z-10 p-[10px]"
         onClick={() => {
           setOpenAddTeamModal(true);
         }}
@@ -80,7 +88,7 @@ export default function GameList(props: IProps) {
         <FontAwesomeIcon size="lg" icon={faPlus} color="white" />
       </button>
 
-      <Modal 
+      <Modal
         onClose={() => {
           setOpenAddTeamModal(false);
         }}
